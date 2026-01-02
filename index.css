@@ -54,6 +54,7 @@ main {
                 border-width: 2px;
                 border-color: #124658;
                 border-style: solid;
+                cursor: pointer;
             }
             img:hover {
                 border-color: #6bc1e1;
