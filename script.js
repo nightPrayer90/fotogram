@@ -1,18 +1,18 @@
 // #region global fields
 const IMAGEFOLDER = "./img/fotos/"; // path foto directory
 const IMAGENAMES = [
-    "Fish1.jpg",
-    "Fish2.jpg",
-    "Fish3.jpg",
-    "Fish4.jpg",
-    "Fish5.jpg",
-    "Fish6.jpg",
-    "Fish7.jpg",
-    "Fish8.jpg",
-    "Fish9.jpg",
-    "Fish10.jpg",
-    "Fish11.jpg",
-    "Fish12.jpg",
+    "fish1.jpg",
+    "fish2.jpg",
+    "fish3.jpg",
+    "fish4.jpg",
+    "fish5.jpg",
+    "fish6.jpg",
+    "fish7.jpg",
+    "fish8.jpg",
+    "fish9.jpg",
+    "fish10.jpg",
+    "fish11.jpg",
+    "fish12.jpg",
 ]; // array for all image names
 let currentIndex = 0; // Run variable for the image currently selected in the dialog
 let isDialogOpen = false; // flag for keyControls -> cant press Enter if a Dialog open
@@ -21,6 +21,23 @@ let isDialogOpen = false; // flag for keyControls -> cant press Enter if a Dialo
 // #region init
 /** Initializes the event listeners for selecting images in the dialog using the arrow keys.*/
 function init() {
+    addEventKeyControls();
+    addEventCloseBackdropClick();
+}
+
+/**logic for backdrop close */
+function addEventCloseBackdropClick() {
+    //
+    const dialog = document.getElementById("diagRoot");
+    dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) {
+            btnCloseDialog();
+        }
+    });
+}
+
+/** add EventListeners for key controls  */
+function addEventKeyControls() {
     document.addEventListener("keydown", (event) => {
         if (event.key === "ArrowLeft") {
             event.preventDefault();
@@ -30,25 +47,41 @@ function init() {
             btnNextPicture();
         } else if (event.key === "Enter") {
             event.preventDefault();
-            let actRef = document.activeElement;
-
-            if (isDialogOpen == false) {
-                if (actRef.tagName == "IMG") openDialog(actRef);
-            } else handleDialogKeyControls(actRef);
+            handleEnterKey();
         } else if (event.key === "Escape") {
             isDialogOpen = false;
         }
     });
-
-    // logic for backdrop close
-    const dialog = document.getElementById("diagRoot");
-    dialog.addEventListener("click", (event) => {
-        if (event.target === dialog) {
-            btnCloseDialog();
-        }
-    });
 }
 //#endregion
+
+//#region Events 
+/** handle Enter Key*/
+function handleEnterKey() {
+    let actRef = document.activeElement;
+    if (isDialogOpen == false) {
+        if (actRef.tagName == "IMG") openDialog(actRef);
+    } else handleDialogKeyControls(actRef);
+}
+
+/** handle dialog keyboard controls */
+function handleDialogKeyControls(element) {
+    let elementId = element.getAttribute("id");
+
+    switch (elementId) {
+        case "diagButtonClose":
+            btnCloseDialog();
+            break;
+        case "diagButtonLeft":
+            btnPrevPicture();
+            break;
+        case "diagButtonRight":
+            btnNextPicture();
+            break;
+    }
+}
+//#endregion
+
 
 // #region dialog controls
 /**
@@ -72,30 +105,13 @@ function btnCloseDialog() {
     isDialogOpen = false;
 }
 
-/** handle dialog keyboard controls */
-function handleDialogKeyControls(element) {
-    let elementId = element.getAttribute("id");
-
-    switch (elementId) {
-        case "diagButtonClose":
-            btnCloseDialog();
-            break;
-        case "diagButtonLeft":
-            btnPrevPicture();
-            break;
-        case "diagButtonRight":
-            btnNextPicture();
-            break;
-    }
-}
-
 /** Dialog button - selection of the next image */
 function btnNextPicture() {
     currentIndex++;
     if (currentIndex >= IMAGENAMES.length) {
         currentIndex = 0;
     }
-    buildDialog(currentIndex);
+    buildDialog();
 }
 
 /** Dialog button - selection of the previous image */
@@ -104,7 +120,7 @@ function btnPrevPicture() {
     if (currentIndex < 0) {
         currentIndex = IMAGENAMES.length - 1;
     }
-    buildDialog(currentIndex);
+    buildDialog();
 }
 //#endregion
 
