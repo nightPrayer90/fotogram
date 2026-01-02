@@ -30,10 +30,11 @@ function init() {
             btnNextPicture();
         } else if (event.key === "Enter") {
             event.preventDefault();
+            let actRef = document.activeElement;
+
             if (isDialogOpen == false) {
-                let actRef = document.activeElement;
-                if (actRef.tagName == "IMG") openDialog(document.activeElement);
-            } else handleDialogKeyControls(document.activeElement);
+                if (actRef.tagName == "IMG") openDialog(actRef);
+            } else handleDialogKeyControls(actRef);
         } else if (event.key === "Escape") {
             isDialogOpen = false;
         }
@@ -71,7 +72,7 @@ function btnCloseDialog() {
     isDialogOpen = false;
 }
 
-/** handleDialogKeyboardFunctions */
+/** handle dialog keyboard controls */
 function handleDialogKeyControls(element) {
     let elementId = element.getAttribute("id");
 
@@ -110,7 +111,6 @@ function btnPrevPicture() {
 // #region dialog render
 /**
  * The function changes the displayed path, the displayed image, and the image navigation.
- * @param {number} index - index of the image for which we are building the dialog
  */
 function buildDialog() {
     setImageName();
